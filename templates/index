@@ -1,1 +1,23 @@
-
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Habla Chévere</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div>
+    <h1>Habla Chévere</h1>
+    <button id="recordBtn">Grabar</button>
+    <button id="stopBtn" disabled>Detener</button>
+    <select id="langSelect">
+      <option value="es">Español</option>
+      <option value="en">Inglés</option>
+    </select>
+    <audio id="audioPlayer" controls></audio>
+    <a id="downloadLink" style="display:none;">⬇️ Descargar audio</a>
+    <div id="output">Aquí aparecerá el feedback.</div>
+  </div>
+  <script src="/static/script.js"></script>
+</body>
+</html>
