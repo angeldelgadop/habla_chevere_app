@@ -6,18 +6,18 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <div>
-    <h1>Habla Chévere</h1>
-    <button id="recordBtn">Grabar</button>
-    <button id="stopBtn" disabled>Detener</button>
-    <select id="langSelect">
-      <option value="es">Español</option>
-      <option value="en">Inglés</option>
-    </select>
-    <audio id="audioPlayer" controls></audio>
-    <a id="downloadLink" style="display:none;">⬇️ Descargar audio</a>
-    <div id="output">Aquí aparecerá el feedback.</div>
-  </div>
+  <h1>🎙️ Habla Chévere</h1>
+  <p>Graba tu voz hablando en español y recibe retroalimentación instantánea.</p>
+  <button id="recordBtn">Grabar</button>
+  <button id="stopBtn" disabled>Detener</button>
+  <select id="langSelect">
+    <option value="es">Español</option>
+    <option value="en">Inglés</option>
+  </select>
+  <br><br>
+  <audio id="audioPlayer" controls></audio><br>
+  <a id="downloadLink" style="display:none;">⬇️ Descargar audio</a>
+  <div id="output">Aquí aparecerá tu transcripción y feedback.</div>
   <script src="/static/script.js"></script>
 </body>
 </html>
