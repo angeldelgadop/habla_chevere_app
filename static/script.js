@@ -43,8 +43,13 @@ function sendAudio(blob) {
     .then(res => res.json())
     .then(data => {
         document.getElementById("output").innerHTML = `
-            <p><strong>Transcripción:</strong><br>${data.transcription}</p>
-            <p><strong>Feedback:</strong><br>${data.feedback}</p>
+            <div class="feedback">
+                <h2>📝 Transcripción</h2>
+                <p>${data.transcription}</p>
+
+                <h2>📌 Observaciones del profesor</h2>
+                <pre>${data.feedback}</pre>
+            </div>
         `;
     })
     .catch(err => {
