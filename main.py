@@ -1,62 +1,56 @@
-from fastapi import FastAPI, File, UploadFile, Form, Request
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.requests import Request
+import uvicorn
 import openai
-import tempfile
 import os
-import traceback
-
-app = FastAPI()
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+import tempfile
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/process-audio")
-async def process_audio(file: UploadFile = File(...), lang: str = Form(...)):
+async def process_audio(request: Request, file: UploadFile = File(...), lang: str = Form("es")):
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
             tmp.write(await file.read())
             tmp_path = tmp.name
 
         with open(tmp_path, "rb") as audio_file:
-            transcript = openai.audio.transcriptions.create(
-                model="whisper-1",
-                file=audio_file,
-                response_format="text",
-                language="es"
-            )
+            transcript_response = openai.Audio.transcribe("whisper-1", audio_file)
+            transcript = transcript_response["text"]
 
-        prompt = f'''Eres un profesor de español. El estudiante dijo: "{transcript}".
-Corrige los errores gramaticales y sugiere una versión corregida.
-Responde en {"español" if lang == "es" else "inglés"} con observaciones y una versión corregida.'''
+        if lang == "es":
+            prompt = f"Corrige el siguiente texto y proporciona retroalimentación gramatical y una versión corregida:\nTexto: \"{transcript}\"."
+        else:
+            prompt = f"Correct the following Spanish text and give grammar feedback and a corrected version:\nText: \"{transcript}\"."
 
-        response = openai.chat.completions.create(
+        chat_response = openai.ChatCompletion.create(
             model="gpt-4",
-            messages=[{"role": "user", "content": prompt}]
+            messages=[
+                {"role": "system", "content": "Eres un profesor de español que corrige y da retroalimentación de forma clara."},
+                {"role": "user", "content": prompt}
+            ]
         )
 
-        feedback_text = response.choices[0].message.content.strip()
-
-        parts = feedback_text.split("Suggested corrected version:")
-        feedback = parts[0].strip()
-        correction = parts[1].strip() if len(parts) > 1 else ""
+        feedback = chat_response.choices[0].message.content.strip()
+        os.remove(tmp_path)
 
         return {
             "transcription": transcript,
-            "feedback": feedback,
-            "correction": correction
+            "feedback": feedback
         }
 
     except Exception as e:
-        print("❌ Error procesando el audio:", str(e))
-        traceback.print_exc()
         return {
             "transcription": "No se pudo transcribir el audio.",
             "feedback": "No se generó feedback.",
