@@ -1,1 +1,11 @@
+services:
+  - type: web
+    name: hablachevere
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker main:app
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
 
