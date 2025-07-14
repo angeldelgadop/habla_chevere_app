@@ -1,7 +1,26 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f4f8;
+  background-color: #f9fafb;
   color: #333;
   text-align: center;
   padding: 20px;
+}
+.feedback {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: left;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+h2 {
+  color: #006699;
+}
+pre {
+  background-color: #eef;
+  padding: 10px;
+  border-radius: 6px;
 }
