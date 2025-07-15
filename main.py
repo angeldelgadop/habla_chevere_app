@@ -46,7 +46,7 @@ Si el texto está bien, solo dilo y no inventes errores. Usa el siguiente format
    ...
 
 Texto del estudiante:
-"""{transcript}"""
+{transcript}
 """
             system_msg = "Eres un profesor de español que da retroalimentación clara y amable en español latinoamericano."
         else:
@@ -66,7 +66,7 @@ If the text is fine, just say so and do not invent problems. Use the following f
    ...
 
 Student's text:
-"""{transcript}"""
+{transcript}
 """
             system_msg = "You are a Spanish teacher who provides friendly and clear feedback in English."
 
